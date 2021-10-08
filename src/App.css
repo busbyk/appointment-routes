@@ -9,3 +9,12 @@
   width: 40%;
   padding-inline: 10px;
 }
+
+.btns > button {
+  margin-right: 10px;
+}
+
+button {
+  padding: 5px;
+  cursor: pointer;
+}
