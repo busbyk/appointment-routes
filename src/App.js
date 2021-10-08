@@ -33,6 +33,8 @@ function App() {
   const [map, setMap] = useState()
   const [maps, setMaps] = useState()
   const [placesService, setPlacesService] = useState()
+  const [directionsService, setDirectionsService] = useState()
+  const [directionsRenderer, setDirectionsRenderer] = useState()
   const [stops, setStops] = useState()
   const [filteredStops, setFilteredStops] = useState()
 
@@ -40,6 +42,8 @@ function App() {
     setMap(map)
     setMaps(maps)
     setPlacesService(new maps.places.PlacesService(map))
+    setDirectionsService(new maps.DirectionsService())
+    setDirectionsRenderer(new maps.DirectionsRenderer())
   }
 
   useEffect(() => {
@@ -100,6 +104,51 @@ function App() {
       map.fitBounds(bounds)
     }
   }, [map, maps, filteredStops])
+
+  useEffect(() => {
+    const runEffect = async () => {
+      directionsRenderer.setMap(map)
+
+      const latLng = (stop) => new maps.LatLng(stop.lat, stop.lng)
+
+      const directionsRequest = {
+        origin: latLng(filteredStops[0]),
+        destination: latLng(filteredStops[filteredStops.length - 1]),
+        travelMode: maps.TravelMode.DRIVING,
+      }
+
+      if (filteredStops.length > 2) {
+        let waypoints = []
+        for (let i = 1; i < filteredStops.length - 1; i++) {
+          waypoints.push({
+            location: latLng(filteredStops[i]),
+            stopover: true,
+          })
+        }
+        directionsRequest.waypoints = waypoints
+      }
+
+      directionsService
+        .route(directionsRequest)
+        .then((res) => {
+          console.log(res)
+          directionsRenderer.setDirections(res)
+        })
+        .catch((err) => {
+          console.error(`Error getting directions: ${err}`)
+        })
+    }
+
+    if (
+      map &&
+      maps &&
+      directionsService &&
+      directionsRenderer &&
+      filteredStops
+    ) {
+      runEffect()
+    }
+  }, [map, maps, directionsService, directionsRenderer, filteredStops])
 
   return (
     <div className='container'>
