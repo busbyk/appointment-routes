@@ -1,7 +1,7 @@
 import React from 'react'
 import GoogleMapReact from 'google-map-react'
 
-const MARKER_HEIGHT = 40
+const MARKER_HEIGHT = 35
 const MARKER_WIDTH = MARKER_HEIGHT
 
 const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
@@ -12,10 +12,16 @@ const Marker = ({text}) => (
       position: 'absolute',
       width: MARKER_WIDTH,
       height: MARKER_HEIGHT,
+      top: 0,
+      right: 0,
+      display: 'flex',
+      alignItems: 'center',
       backgroundColor: 'white',
-      borderRadius: '0 50% 50% 50%',
+      borderRadius: '50% 0 50% 50%',
       padding: 10,
       textAlign: 'center',
+      verticalAlign: 'center',
+      boxShadow: '2px 2px 2px grey',
     }}
   >
     {text}
