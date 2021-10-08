@@ -1,8 +1,7 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import './App.css'
 import Map from './components/Map'
 import ControlPanel from './components/ControlPanel'
-import {useEffect} from 'react/cjs/react.development'
 
 const initialStops = {
   today: [
