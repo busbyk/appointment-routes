@@ -37,6 +37,7 @@ function App() {
   const [directionsRenderer, setDirectionsRenderer] = useState()
   const [stops, setStops] = useState()
   const [filteredStops, setFilteredStops] = useState()
+  const [error, setError] = useState()
 
   const apiIsLoaded = (map, maps) => {
     setMap(map)
@@ -44,6 +45,36 @@ function App() {
     setPlacesService(new maps.places.PlacesService(map))
     setDirectionsService(new maps.DirectionsService())
     setDirectionsRenderer(new maps.DirectionsRenderer())
+  }
+
+  const handleAddStop = (newStopQuery) => {
+    const request = {
+      query: newStopQuery,
+      fields: ['name', 'geometry'],
+    }
+
+    let promise = new Promise((resolve, reject) => {
+      placesService.findPlaceFromQuery(request, (results, status) => {
+        if (status === maps.places.PlacesServiceStatus.OK && results) {
+          const location = results[0].geometry.location
+          resolve({
+            name: results[0].name,
+            lat: location.lat(),
+            lng: location.lng(),
+          })
+        } else {
+          reject(`Oi, error finding ${request.query} in the places api`)
+        }
+      })
+    })
+
+    promise
+      .then((res) => {
+        setStops(Object.assign({}, stops, {[filter]: [...stops[filter], res]}))
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
 
   useEffect(() => {
@@ -125,7 +156,15 @@ function App() {
             stopover: true,
           })
         }
+
+        if (waypoints.length > 10) {
+          return setError(
+            'Cannot have more than 10 waypoints as this exceeds the Google Maps free tier'
+          )
+        }
+
         directionsRequest.waypoints = waypoints
+        directionsRequest.optimizeWaypoints = true
       }
 
       directionsService
@@ -152,7 +191,12 @@ function App() {
 
   return (
     <div className='container'>
-      <ControlPanel stops={filteredStops} setFilter={setFilter} />
+      <ControlPanel
+        stops={filteredStops}
+        setFilter={setFilter}
+        handleAddStop={handleAddStop}
+        error={error}
+      />
       <Map stops={filteredStops} apiIsLoaded={apiIsLoaded} />
     </div>
   )
