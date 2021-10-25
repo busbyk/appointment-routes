@@ -16,7 +16,7 @@ const NavBar = () => {
     >
       <div className='navbar-brand'>
         <a className='navbar-item' href='/'>
-          <h2 className='title is-4'>Technician Route Map</h2>
+          <h2 className='title is-4'>Appointment Routes</h2>
         </a>
       </div>
       <div className='navbar-menu is-active'>
