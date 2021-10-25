@@ -74,6 +74,28 @@ exports.handler = async function (event) {
     } else {
       return sendResponse(400, 'directionsRequest is required.')
     }
+  } else if (path.includes('/technicians')) {
+    console.log('got to technicians path')
+    const dummyData = [
+      {
+        name: 'Sally Doe',
+        address_1: 'Park City, UT',
+        address_2: 'Heber City, UT',
+        address_3: 'Midway, UT',
+      },
+      {
+        name: 'John Doe',
+        address_1: 'Park City, UT',
+        address_2: 'Logan, UT',
+      },
+      {
+        name: 'Jordan Doe',
+        address_1: 'Park City, UT',
+        address_2: 'Antelope Island, UT',
+        address_3: 'Ogden, UT',
+      },
+    ]
+    return sendResponse(200, dummyData)
   } else {
     return {statusCode: 404}
   }

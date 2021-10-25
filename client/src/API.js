@@ -28,7 +28,7 @@ const generateAddressArr = (tech) => {
 
 export const getTechsByDate = async (date) => {
   const endpoint = 'technicians'
-  const url = `/api/${endpoint}`
+  const url = `${GOOGLE_PROXY_BASE_URL}/${endpoint}`
   const formattedDate = dateFnsFormat(date, 'yyyy-MM-dd')
 
   return new Promise(async (resolve, reject) => {
